@@ -1,19 +1,31 @@
 {
   "name": "NodeJS",
-  "image": "ghcr.io/podkrepi-bg/nodejs-devcontainer:v1.1.0",
+  // "image": "ghcr.io/podkrepi-bg/nodejs-devcontainer:v1.2.0",
+  "image": "local-podkrepi-bg-dev-container:1.1.1-beta-1",
   "forwardPorts": [9229, 5010],
   "containerEnv": {
     "DATABASE_URL": "postgres://postgres:postgrespass@host.docker.internal:5432/postgres?schema=api",
     "NODE_ENV": "development"
   },
   "postStartCommand": "yarn",
-  "extensions": [
-    "ms-azuretools.vscode-docker",
-    "nrwl.angular-console",
-    "esbenp.prettier-vscode",
-    "firsttris.vscode-jest-runner",
-    "dbaeumer.vscode-eslint",
-    "editorconfig.editorconfig"
-  ],
-  "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"]
+  "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "nrwl.angular-console",
+        "esbenp.prettier-vscode",
+        "firsttris.vscode-jest-runner",
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "Prisma.prisma"
+      ]
+    }
+  },
+
+  // share a network with the other dev container (frontend)
+	"initializeCommand": "docker network inspect podkrepi_dev_shared_network > /dev/null || docker network create podkrepi_dev_shared_network --attachable",
+  "runArgs": [
+      "--network=podkrepi_dev_shared_network"
+  ]
 }
